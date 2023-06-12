@@ -9,7 +9,7 @@ const HomeScreen = (props: Props) => {
       <View className='flex-1 bg-neutral-800 items-center justify-center'>
         <Text className="text-xl text-green-500">Welcome to this movie app</Text>
         <Text className="text-green-500">I just want to test the eas update thing</Text>
-        <Text className="text-green-500">I hope you enjoy the app</Text>
+        <Text className="text-green-500">Am i really the greatest</Text>
         <Text className="text-green-500">Developed by Abdulmalik Adebayo (devProMaleek)</Text>
       </View>
   );

@@ -2,8 +2,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
+import SplashScreen from './screens/SplashScreen';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  SplashScreen: undefined;
+  HomeScreen: undefined;
+  MovieScreen: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 type Props = {};
 
@@ -14,9 +21,11 @@ const Navigation = (props: Props) => {
         screenOptions={{
           headerShown: false,
         }}
+        initialRouteName="SplashScreen"
       >
-        <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
-        <Stack.Screen name="Movie" options={{ headerShown: false }} component={MovieScreen} />
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="HomeScreen" options={{ headerShown: false }} component={HomeScreen} />
+        <Stack.Screen name="MovieScreen" options={{ headerShown: false }} component={MovieScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

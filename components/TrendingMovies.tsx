@@ -2,7 +2,8 @@ import { View, Text, Dimensions } from 'react-native';
 import React, { useCallback } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import MovieCard from './MovieCard';
-import { useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
   data: number[];
@@ -11,9 +12,9 @@ type Props = {
 let { width, height } = Dimensions.get('window');
 
 const TrendingMovies = ({ data }: Props) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const handleMovieCardPress = useCallback(() => {
-    navigation.navigate('Movie');
+    navigation.navigate('MovieScreen');
   }, [navigation]);
   return (
     <View className="mb-8">

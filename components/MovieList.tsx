@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, Dimensions, Image, TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { styles } from '../themes';
 import { ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, ParamListBase } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
   title: string;
@@ -14,7 +15,14 @@ let { width, height } = Dimensions.get('window');
 
 const MovieList = ({ title, data, hideSeeAll }: Props) => {
   let movieName = 'Ant-Man and the Wasp: Quantumania';
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
+  const handleMovieCardPress = useCallback(
+    (movie: any) => {
+      navigation.push('MovieScreen', movie);
+    },
+    [navigation]
+  );
   return (
     <View className="mb-8 space-y-4">
       <View className="mx-4 flex-row justify-between items-center">
@@ -29,9 +37,14 @@ const MovieList = ({ title, data, hideSeeAll }: Props) => {
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
-        {data.map((item, index) => {
+        {data.map((movie, index) => {
           return (
-            <TouchableWithoutFeedback key={index} onPress={() => {}}>
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => {
+                handleMovieCardPress(movie);
+              }}
+            >
               <View className="space-y-1 mr-4">
                 <Image
                   source={require('../assets/images/moviePoster2.png')}

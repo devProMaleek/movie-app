@@ -7,22 +7,25 @@ import { useNavigation } from '@react-navigation/native';
 type Props = {
   title: string;
   data: number[];
+  hideSeeAll?: boolean;
 };
 
 let { width, height } = Dimensions.get('window');
 
-const MovieList = ({ title, data }: Props) => {
+const MovieList = ({ title, data, hideSeeAll }: Props) => {
   let movieName = 'Ant-Man and the Wasp: Quantumania';
   const navigation = useNavigation();
   return (
     <View className="mb-8 space-y-4">
       <View className="mx-4 flex-row justify-between items-center">
         <Text className="text-white text-lg">{title}</Text>
-        <TouchableOpacity>
-          <Text style={styles.text} className="text-base">
-            See All
-          </Text>
-        </TouchableOpacity>
+        {!hideSeeAll && (
+          <TouchableOpacity>
+            <Text style={styles.text} className="text-base">
+              See All
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>

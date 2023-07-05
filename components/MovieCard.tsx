@@ -8,9 +8,9 @@ type Props = {
 
 let { width, height } = Dimensions.get('window');
 
-const MovieCard = ({ movie }: Props) => {
+const MovieCard = ({ movie, onPress }: Props) => {
   return (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={onPress}>
       <Image
         source={require('../assets/images/moviePoster1.png')}
         style={{ width: width * 0.6, height: height * 0.4 }}

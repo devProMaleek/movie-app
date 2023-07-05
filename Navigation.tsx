@@ -3,13 +3,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
 import MovieScreen from './screens/MovieScreen';
 import SplashScreen from './screens/SplashScreen';
-import PersonScreen from './screens/PersonScreen';
+import CastScreen from './screens/CastScreen';
 
 type RootStackParamList = {
   SplashScreen: undefined;
   HomeScreen: undefined;
   MovieScreen: undefined;
-  PersonScreen: undefined;
+  CastScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,7 +28,7 @@ const Navigation = (props: Props) => {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="HomeScreen" options={{ headerShown: false }} component={HomeScreen} />
         <Stack.Screen name="MovieScreen" options={{ headerShown: false }} component={MovieScreen} />
-        <Stack.Screen name="PersonScreen" options={{ headerShown: false }} component={PersonScreen} />
+        <Stack.Screen name="CastScreen" options={{ headerShown: false }} component={CastScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

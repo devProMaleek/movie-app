@@ -13,15 +13,18 @@ let { width, height } = Dimensions.get('window');
 
 const TrendingMovies = ({ data }: Props) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const handleMovieCardPress = useCallback(() => {
-    navigation.navigate('MovieScreen');
-  }, [navigation]);
+  const handleMovieCardPress = useCallback(
+    (item: any) => {
+      navigation.navigate('MovieScreen', item);
+    },
+    [navigation]
+  );
   return (
     <View className="mb-8">
       <Text className="text-white text-lg mx-4 mb-5">Trending Movies</Text>
       <Carousel
         data={data}
-        renderItem={({ item }) => <MovieCard movie={item} onPress={handleMovieCardPress} />}
+        renderItem={({ item }) => <MovieCard movie={item} onPress={() => handleMovieCardPress(item)} />}
         firstItem={1}
         inactiveSlideOpacity={0.6}
         sliderWidth={width}

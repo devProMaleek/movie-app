@@ -4,17 +4,17 @@ import { styles } from '../themes';
 import { ScrollView } from 'react-native';
 import { useNavigation, ParamListBase } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { fallbackMoviePoster, fetchImageWidth185 } from '../api/moviedb';
 
 type Props = {
   title: string;
-  data: number[];
+  data: Movie[];
   hideSeeAll?: boolean;
 };
 
 let { width, height } = Dimensions.get('window');
 
 const MovieList = ({ title, data, hideSeeAll }: Props) => {
-  let movieName = 'Ant-Man and the Wasp: Quantumania';
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const handleMovieCardPress = useCallback(
@@ -38,6 +38,7 @@ const MovieList = ({ title, data, hideSeeAll }: Props) => {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
         {data.map((movie, index) => {
+          let movieName = movie.title || movie.original_title;
           return (
             <TouchableWithoutFeedback
               key={index}
@@ -47,7 +48,7 @@ const MovieList = ({ title, data, hideSeeAll }: Props) => {
             >
               <View className="space-y-1 mr-4">
                 <Image
-                  source={require('../assets/images/moviePoster2.png')}
+                  source={{ uri: fetchImageWidth185(movie.poster_path) || fallbackMoviePoster }}
                   className="rounded-3xl"
                   style={{ width: width * 0.33, height: height * 0.22 }}
                 />

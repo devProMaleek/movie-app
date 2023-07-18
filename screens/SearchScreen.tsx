@@ -26,7 +26,7 @@ type FormValues = {
 const { width, height } = Dimensions.get('window');
 
 const SearchScreen = (props: Props) => {
-  const [searchResults, setSearchResults] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   let movieName: string = 'Ant-Man and the Wasp: Quantumania';
   const {
@@ -90,7 +90,7 @@ const SearchScreen = (props: Props) => {
                     return (
                       <TouchableWithoutFeedback
                         key={index}
-                        onPress={() => navigation.push('MovieScreen', result as Object)}
+                        onPress={() => navigation.push('MovieScreen', result)}
                       >
                         <View className="space-y-2 mb-4">
                           <Image

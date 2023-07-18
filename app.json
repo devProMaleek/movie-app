@@ -28,6 +28,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
+      "API_KEY": "e75eff265690ebd0306634fcc99480b0",
       "eas": {
         "projectId": "0bab26bc-1357-43fb-9e16-5da1b564ece5"
       }

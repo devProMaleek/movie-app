@@ -1,8 +1,9 @@
 import { View, Text, Dimensions, TouchableWithoutFeedback, Image } from 'react-native';
 import React from 'react';
+import { fetchImageWidth500 } from '../api/moviedb';
 
 type Props = {
-  movie: number;
+  movie: Movie;
   onPress: () => void
 };
 
@@ -12,7 +13,7 @@ const MovieCard = ({ movie, onPress }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Image
-        source={require('../assets/images/moviePoster1.png')}
+        source={{ uri: fetchImageWidth500(movie.poster_path) }}
         style={{ width: width * 0.6, height: height * 0.4 }}
         className='rounded-3xl'
       />

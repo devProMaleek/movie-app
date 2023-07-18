@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Cast from '../components/Cast';
 import MovieList from '../components/MovieList';
 import Loading from '../components/Loading';
+import { fallbackMoviePoster, fetchImageWidth500, fetchMovieCredits, fetchMovieDetails, fetchSimilarMovies } from '../api/moviedb';
 
 type Props = {};
 
@@ -17,20 +18,58 @@ let { width, height } = Dimensions.get('window');
 const isIOS = Platform.OS === 'ios';
 
 const MovieScreen = (props: Props) => {
-  let movieName = 'Ant-Man and the Wasp: Quantumania';
   const { params: item } = useRoute();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [casts, setCasts] = useState<number[]>([1, 2, 3, 4, 5, 6, 7]);
-  const [similarMovies, setSimilarMovies] = useState<number[]>([1, 2, 3, 4, 5, 6, 7]);
+  const [casts, setCasts] = useState<Cast[]>([]);
+  const [movie, setMovie] = useState<ExtendedMovie>();
+  const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const toggleFavorite = useCallback(() => {
     setIsFavorite(!isFavorite);
   }, [isFavorite]);
 
-  useEffect(() => {}, [item]);
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+
+  const getMovieDetails = useCallback(async (id: number) => {
+    const data = await fetchMovieDetails(id);
+    if (data) {
+      setMovie(data as unknown as ExtendedMovie);
+    }
+    setLoading(false);
+  }, []);
+
+  const getMovieCredits = useCallback(async (id: number) => {
+    const data = await fetchMovieCredits(id);
+    if (data && data.cast) {
+      setCasts(data.cast);
+    }
+    setLoading(false);
+  }, []);
+
+  const getSimilarMovies = useCallback(async (id: number) => {
+    const data = await fetchSimilarMovies(id);
+    if (data && data.results) {
+      setSimilarMovies(data.results);
+    }
+    setLoading(false);
+  }, [])
+
+  useEffect(() => {
+    getMovieDetails(item?.id);
+    getMovieCredits(item?.id);
+    getSimilarMovies(item?.id);
+  }, [item]);
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 20 }} className="flex-1 bg-neutral-900">
@@ -53,7 +92,10 @@ const MovieScreen = (props: Props) => {
         ) : (
           <>
             <View>
-              <Image source={require('../assets/images/moviePoster2.png')} style={{ width, height: height * 0.55 }} />
+              <Image
+                source={{ uri: fetchImageWidth500(movie?.poster_path) || fallbackMoviePoster }}
+                style={{ width, height: height * 0.55 }}
+              />
               <LinearGradient
                 colors={['transparent', 'rgba(23,23,23,0.8)', 'rgba(23,23,23,1)']}
                 style={{ width, height: height * 0.4 }}
@@ -67,20 +109,31 @@ const MovieScreen = (props: Props) => {
       </View>
 
       <View style={{ marginTop: -(height * 0.09) }} className="space-y-3">
-        <Text className="text-white text-3xl text-center font-bold tracking-wider">{movieName}</Text>
-        <Text className="text-neutral-400 font-semibold text-base text-center">Released • 2022 • 170 min</Text>
+        <Text className="text-white text-3xl text-center font-bold tracking-wider">
+          {movie?.title || movie?.original_title}
+        </Text>
+        {movie?.id ? (
+          <>
+            <Text className="text-neutral-400 font-semibold text-base text-center">
+              {movie?.status} • {movie?.release_date?.split('-')[0]} • {movie?.runtime} min
+            </Text>
+          </>
+        ) : null}
 
         <View className="flex-row justify-center mx-4 space-x-2">
-          <Text className="text-neutral-400 font-semibold text-base text-center">• Action </Text>
-          <Text className="text-neutral-400 font-semibold text-base text-center">• Thrill </Text>
-          <Text className="text-neutral-400 font-semibold text-base text-center">• Comedy </Text>
+          {movie?.genres?.map((genre, index) => {
+            let showDot = index + 1 !== movie.genres.length;
+            return (
+              <Text key={index} className="text-neutral-400 font-semibold text-base text-center">
+                {genre?.name}
+                {showDot ? '  •' : null}
+              </Text>
+            );
+          })}
         </View>
 
         <Text className="text-neutral-400 mx-4 tracking-wide text-justify">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, eveniet aliquam laborum suscipit recusandae
-          deserunt debitis molestiae minima explicabo doloremque? Perspiciatis, ea. Et, magni! Dolorem, magnam delectus!
-          Assumenda deserunt ullam voluptatem cumque sapiente repellendus fugiat sequi at saepe quas voluptate minima a
-          perspiciatis, labore expedita porro, hic, nesciunt praesentium nemo.
+          {movie?.overview}
         </Text>
       </View>
 

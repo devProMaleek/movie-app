@@ -6,7 +6,7 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type Props = {
-  data: number[];
+  data: Movie[];
 };
 
 let { width, height } = Dimensions.get('window');

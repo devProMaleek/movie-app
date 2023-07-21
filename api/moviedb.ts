@@ -12,6 +12,9 @@ const movieDetailsEndpoint = (id: number) => `${baseURL}/movie/${id}?api_key=${a
 const movieCreditsEndpoint = (id: number) => `${baseURL}/movie/${id}/credits?api_key=${apiKey}`;
 const similarMoviesEndpoint = (id: number) => `${baseURL}/movie/${id}/similar?api_key=${apiKey}`;
 
+const personDetailsEndpoint = (id: number) => `${baseURL}/person/${id}?api_key=${apiKey}`;
+const personMoviesEndpoint = (id: number) => `${baseURL}/person/${id}/movie_credits?api_key=${apiKey}`;
+
 const apiCall = async (
   endpoint: string,
   params?: Record<string, number | string> | {}
@@ -53,6 +56,14 @@ export const fetchMovieCredits = (id: number) => {
 
 export const fetchSimilarMovies = (id: number) => {
   return apiCall(similarMoviesEndpoint(id));
+};
+
+export const fetchPersonDetails = (personId: number) => {
+  return apiCall(personDetailsEndpoint(personId));
+};
+
+export const fetchPersonMovies = (personId: number) => {
+  return apiCall(personMoviesEndpoint(personId));
 };
 
 export const fetchImageWidth500 = (path: string | undefined): string | undefined =>

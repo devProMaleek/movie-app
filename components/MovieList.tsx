@@ -8,7 +8,7 @@ import { fallbackMoviePoster, fetchImageWidth185 } from '../api/moviedb';
 
 type Props = {
   title: string;
-  data: Movie[];
+  data: Movie[] | Cast[];
   hideSeeAll?: boolean;
 };
 
@@ -38,7 +38,7 @@ const MovieList = ({ title, data, hideSeeAll }: Props) => {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
         {data.map((movie, index) => {
-          let movieName = movie.title || movie.original_title;
+          let movieName = movie?.title || movie.original_title;
           return (
             <TouchableWithoutFeedback
               key={index}
@@ -48,7 +48,7 @@ const MovieList = ({ title, data, hideSeeAll }: Props) => {
             >
               <View className="space-y-1 mr-4">
                 <Image
-                  source={{ uri: fetchImageWidth185(movie.poster_path) || fallbackMoviePoster }}
+                  source={{ uri: fetchImageWidth185(movie?.poster_path) || fallbackMoviePoster }}
                   className="rounded-3xl"
                   style={{ width: width * 0.33, height: height * 0.22 }}
                 />

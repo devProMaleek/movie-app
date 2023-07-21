@@ -1,4 +1,4 @@
-interface APIResponse extends MovieAPIResponse {
+interface APIResponse extends MovieAPIResponse extends Actor {
   id: number;
   cast: Cast[];
   crew: Crew[];
@@ -18,7 +18,24 @@ interface CastAPIResponse {
   crew: Crew[];
 };
 
-interface Cast {
+interface Actor {
+  adult: boolean;
+  also_known_as: string[];
+  biography: string;
+  birthday: string;
+  deathday: string | undefined;
+  gender: number;
+  homepage: string | undefined;
+  id: number;
+  imdb_id: string;
+  known_for_department: string;
+  name: string;
+  place_of_birth: string;
+  popularity: number;
+  profile_path: string | undefined;
+}
+
+interface Cast extends Movie {
   adult: boolean;
   gender: number;
   id: number;

@@ -17,6 +17,8 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { XMarkIcon } from 'react-native-heroicons/outline';
 import { theme } from '../themes';
 import Loading from '../components/Loading';
+import { debounce } from 'lodash';
+import { fallbackMoviePoster, fetchImageWidth185, searchMovies } from '../api/moviedb';
 
 type Props = {};
 type FormValues = {
@@ -28,7 +30,6 @@ const { width, height } = Dimensions.get('window');
 const SearchScreen = (props: Props) => {
   const [searchResults, setSearchResults] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  let movieName: string = 'Ant-Man and the Wasp: Quantumania';
   const {
     control,
     handleSubmit,
@@ -46,15 +47,48 @@ const SearchScreen = (props: Props) => {
     navigation.navigate('HomeScreen');
   }, []);
 
+  const handleSearch = async (value: string) => {
+    console.log('Search value:', value);
+    if (value && value.length > 1) {
+      setLoading(true);
+      try {
+        const params = {
+          query: value,
+          page: 1,
+          include_adult: false,
+          language: 'en-US',
+        };
+        const data = await searchMovies(params);
+        if (data && data.results) {
+          setSearchResults(data.results);
+        }
+      } catch (error: any) {
+        console.log(error, 'Search Error');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+      setSearchResults([]);
+    }
+  };
+
+  const handleTextDebounce = debounce((value: string) => {
+    // Perform your logic here, which will be executed after the debounce delay
+    handleSearch(value);
+  }, 500);
+
   return (
     <SafeAreaView className="bg-neutral-800 flex-1">
       <View className="mb-3 mx-4 flex-row justify-between items-center border border-neutral-500 rounded-full">
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, value } }) => (
             <TextInput
-              onChangeText={onChange}
-              onBlur={onBlur}
+              onChangeText={(value) => {
+                onChange(value);
+                handleTextDebounce(value);
+              }}
               value={value}
               placeholder="Search Movies"
               placeholderTextColor={'lightgray'}
@@ -87,15 +121,13 @@ const SearchScreen = (props: Props) => {
                 <Text className="text-white font-semibold ml-1 text-base">Results ({searchResults.length})</Text>
                 <View className="flex-row justify-between flex-wrap">
                   {searchResults.map((result, index) => {
+                    let movieName = result?.title || result.original_title;
                     return (
-                      <TouchableWithoutFeedback
-                        key={index}
-                        onPress={() => navigation.push('MovieScreen', result)}
-                      >
+                      <TouchableWithoutFeedback key={index} onPress={() => navigation.push('MovieScreen', result)}>
                         <View className="space-y-2 mb-4">
                           <Image
                             className="rounded-3xl"
-                            source={require('../assets/images/moviePoster2.png')}
+                            source={{ uri: fetchImageWidth185(result.poster_path) || fallbackMoviePoster }}
                             style={{ width: width * 0.44, height: height * 0.3 }}
                           />
                           <Text className="text-neutral-300 ml-1">

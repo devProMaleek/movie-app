@@ -10,7 +10,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Cast from '../components/Cast';
 import MovieList from '../components/MovieList';
 import Loading from '../components/Loading';
-import { fallbackMoviePoster, fetchImageWidth500, fetchMovieCredits, fetchMovieDetails, fetchSimilarMovies } from '../api/moviedb';
+import {
+  fallbackMoviePoster,
+  fetchImageWidth500,
+  fetchMovieCredits,
+  fetchMovieDetails,
+  fetchSimilarMovies,
+} from '../api/moviedb';
 
 type Props = {};
 
@@ -40,7 +46,6 @@ const MovieScreen = (props: Props) => {
     return () => clearTimeout(timeout);
   }, []);
 
-
   const getMovieDetails = useCallback(async (id: number) => {
     const data = await fetchMovieDetails(id);
     if (data) {
@@ -63,7 +68,7 @@ const MovieScreen = (props: Props) => {
       setSimilarMovies(data.results);
     }
     setLoading(false);
-  }, [])
+  }, []);
 
   useEffect(() => {
     getMovieDetails(item?.id);
@@ -132,14 +137,12 @@ const MovieScreen = (props: Props) => {
           })}
         </View>
 
-        <Text className="text-neutral-400 mx-4 tracking-wide text-justify">
-          {movie?.overview}
-        </Text>
+        <Text className="text-neutral-400 mx-4 tracking-wide text-justify">{movie?.overview}</Text>
       </View>
 
-      <Cast navigation={navigation} casts={casts} />
+      {casts.length > 0 && <Cast navigation={navigation} casts={casts} />}
 
-      <MovieList title="Similar Movies" hideSeeAll={true} data={similarMovies} />
+      {similarMovies.length > 0 && <MovieList title="Similar Movies" hideSeeAll={true} data={similarMovies} />}
     </ScrollView>
   );
 };

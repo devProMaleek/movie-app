@@ -7,6 +7,7 @@ const baseURL = `https://api.themoviedb.org/3`;
 const trendingMoviesEndpoint = `${baseURL}/trending/movie/day?api_key=${apiKey}`;
 const upcomingMoviesEndpoint = `${baseURL}/movie/upcoming?api_key=${apiKey}`;
 const topRatedMoviesEndpoint = `${baseURL}/movie/top_rated?api_key=${apiKey}`;
+const searchMoviesEndpoint = `${baseURL}/search/movie?api_key=${apiKey}`;
 
 const movieDetailsEndpoint = (id: number) => `${baseURL}/movie/${id}?api_key=${apiKey}`;
 const movieCreditsEndpoint = (id: number) => `${baseURL}/movie/${id}/credits?api_key=${apiKey}`;
@@ -64,6 +65,10 @@ export const fetchPersonDetails = (personId: number) => {
 
 export const fetchPersonMovies = (personId: number) => {
   return apiCall(personMoviesEndpoint(personId));
+};
+
+export const searchMovies = (params: Record<string, number | string> | {}) => {
+  return apiCall(searchMoviesEndpoint, params);
 };
 
 export const fetchImageWidth500 = (path: string | undefined): string | undefined =>
